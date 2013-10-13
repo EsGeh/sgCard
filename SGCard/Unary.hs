@@ -1,8 +1,8 @@
 {-# LANGUAGE MultiParamTypeClasses, FunctionalDependencies, UndecidableInstances, FlexibleInstances, DeriveDataTypeable, Rank2Types, ScopedTypeVariables #-}
 --{-# OPTIONS_GHC -fglasgow-exts #-}
-module Card.Unary where
-import Card.Card as Card
-import Card.Card(Card)
+module SGCard.Unary where
+import SGCard.Card as Card
+import SGCard.Card(Card)
 --import Util
 
 

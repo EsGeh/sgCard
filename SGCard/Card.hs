@@ -1,4 +1,4 @@
-module Card.Card where
+module SGCard.Card where
 
 class Card c where
 	toInt :: c -> Int
