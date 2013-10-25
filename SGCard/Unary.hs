@@ -78,6 +78,6 @@ instance Show Zero where
 instance (Card n ) => Show (Succ n) where
 	show (Succ n) = show $ Card.toInt (Succ n)
 instance Card Zero where
-	toInt n = 0
+	toInt _ = 0
 instance (Card n) => Card (Succ n) where
-	toInt (Succ n) = succ (Card.toInt n)
+	toInt _ = succ $ toInt (undefined :: n)
