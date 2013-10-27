@@ -4,7 +4,8 @@ module SGCard.Ratio (
 	frac, withFrac,
 ) where
 
-import SGCard
+import SGCard.Card
+import SGCard.Unary
 import Data.Ratio
 
 data Fraction num den = CTFrac num den
