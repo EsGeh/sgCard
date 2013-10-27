@@ -1,5 +1,6 @@
 {-# LANGUAGE Rank2Types, ScopedTypeVariables #-}
 module SGCard.Ratio (
+	FractionClass(..),
 	Fraction(),
 	frac, withFrac,
 ) where
