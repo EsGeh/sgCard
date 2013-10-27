@@ -38,9 +38,9 @@ mul = undefined
 succ' :: (Card n)=>  n -> Succ n
 succ' = Succ
 
-toCard :: Int -> (forall n . Card n => n -> w) -> w
-toCard 0 k = k (undefined :: Zero)
-toCard n k = toCard (n-1) (\(_ :: n) -> k (undefined :: Succ n))
+withCard :: Int -> (forall n . Card n => n -> w) -> w
+withCard 0 f = f (undefined :: Zero)
+withCard n f = withCard (n-1) (\(_ :: n) -> f (undefined :: Succ n))
 
 type N0 = Zero
 type N1 = Succ N0
