@@ -17,4 +17,4 @@ cabal-version:       >=1.8
 library
   exposed-modules:     SGCard, SGCard.Card, SGCard.Unary, SGCard.Ratio
   -- other-modules:       
-  build-depends:       base ==4.5.*, syb ==0.3.*
+  build-depends:       base ==4.6.*, syb ==0.4.*
