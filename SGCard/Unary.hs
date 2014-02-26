@@ -1,8 +1,8 @@
-{-# LANGUAGE MultiParamTypeClasses, FunctionalDependencies, UndecidableInstances, FlexibleInstances, DeriveDataTypeable, Rank2Types, ScopedTypeVariables #-}
+{-# LANGUAGE MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances, DeriveDataTypeable, Rank2Types, ScopedTypeVariables, FlexibleContexts, UndecidableInstances #-}
 --{-# OPTIONS_GHC -fglasgow-exts #-}
 module SGCard.Unary where
-import SGCard.Card as Card
-import SGCard.Card(Card)
+import SGCard.Container
+--import SGCard.Card(Card)
 --import Util
 
 
@@ -14,16 +14,16 @@ data Succ n = Succ n deriving(Typeable,Data)
 class Inc a b | a -> b
 --instance Inc Zero (Succ Zero)
 --instance Inc (Succ a) (Succ (Succ a))
-instance (Card n) => Inc n (Succ n)
+instance (Container Int n) => Inc n (Succ n)
 
-class (Card a, Card b) => Add a b c | a b -> c --, a c -> b
-instance (Card b) => Add Zero b b
+class (Container Int a, Container Int b) => Add a b c | a b -> c --, a c -> b
+instance (Container Int b) => Add Zero b b
 instance (Add a b c) => Add (Succ a) b (Succ c)
 
-class (Card a, Card b, Card c) => Mul a b c | a b -> c 
-instance (Card b) => Mul Zero b Zero
+class (Container Int a, Container Int b, Container Int c) => Mul a b c | a b -> c 
+instance (Container Int b) => Mul Zero b Zero
 --instance Mul N1 b N1
-instance (Card c,Card c', Mul a b c, Add c b c') => Mul (Succ a) b c'
+instance (Container Int c,Container Int c', Mul a b c, Add c b c') => Mul (Succ a) b c'
 
 inc :: (Inc a b) => a -> b
 inc = undefined
@@ -35,10 +35,10 @@ mul :: (Mul a b c) => a -> b -> c
 mul = undefined
 --}
 
-succ' :: (Card n)=>  n -> Succ n
+succ' :: (Container Int n)=>  n -> Succ n
 succ' = Succ
 
-withCard :: Int -> (forall n . Card n => n -> w) -> w
+withCard :: Int -> (forall n . Container Int n => n -> w) -> w
 withCard 0 f = f (undefined :: Zero)
 withCard n f = withCard (n-1) (\(_ :: n) -> f (undefined :: Succ n))
 
@@ -73,11 +73,13 @@ n7 = Succ n6
 n8 = Succ n7
 n9 = Succ n8
 
+{-
 instance Show Zero where
 	show n = show $ Card.toInt n
 instance (Card n ) => Show (Succ n) where
 	show (Succ n) = show $ Card.toInt (Succ n)
-instance Card Zero where
-	toInt _ = 0
-instance (Card n) => Card (Succ n) where
-	toInt _ = succ $ toInt (undefined :: n)
+-}
+instance Container Int Zero where
+	fromContainer _ = 0
+instance (Container Int n) => Container Int (Succ n) where
+	fromContainer _ = succ $ fromContainer (undefined :: n)

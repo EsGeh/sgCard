@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                sgCard
-version:             1.2.1.0
+version:             2.0.0.0
 synopsis:            a haskell library providing a way to represent integer numbers as types
 -- description:         
 -- license:             
@@ -15,6 +15,6 @@ build-type:          Simple
 cabal-version:       >=1.8
 
 library
-  exposed-modules:     SGCard, SGCard.Card, SGCard.Unary, SGCard.Ratio
+  exposed-modules:     SGCard, SGCard.Container, SGCard.Unary, SGCard.Ratio
   -- other-modules:       
-  build-depends:       base ==4.6.*, syb ==0.4.*
+  build-depends:       base ==4.6.*, syb ==0.4.*, reflection == 1.4, tagged == 0.7.*
