@@ -73,12 +73,11 @@ n7 = Succ n6
 n8 = Succ n7
 n9 = Succ n8
 
-{-
 instance Show Zero where
-	show n = show $ Card.toInt n
-instance (Card n ) => Show (Succ n) where
-	show (Succ n) = show $ Card.toInt (Succ n)
--}
+	show n = show $ fromContainer n
+instance ( Container Int n ) => Show (Succ n) where
+	show (Succ n) = show $ fromContainer (Succ n)
+
 instance Container Int Zero where
 	fromContainer _ = 0
 instance (Container Int n) => Container Int (Succ n) where
