@@ -19,12 +19,11 @@ instance (Container t fst, Container t snd) => Snd (fst,snd) snd
 
 -- this enables compatibility with the "reflection" library.
 -- still experimental...
-instance (Reifies config t) => Container t (Proxy config) where
-	fromContainer x = reflect x
-{-
-instance (Reifies config Int) => Container Int (Proxy config) where
+{-instance (Reifies config t) => Container t (Proxy config) where
 	fromContainer x = reflect x
 -}
+instance (Reifies config Int) => Container Int (Proxy config) where
+	fromContainer x = reflect x
 
 {- examples:
 example = reify 10 f

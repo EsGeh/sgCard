@@ -11,6 +11,32 @@ import Data.Generics
 data Zero = Zero deriving(Typeable,Data)
 data Succ n = Succ n deriving(Typeable,Data)
 
+-- show instance
+instance Show Zero where
+	show n = show $ fromContainer n
+instance ( Container Int n ) => Show (Succ n) where
+	show (Succ n) = show $ fromContainer (Succ n)
+
+-- container for Integers:
+instance Container Int Zero where
+	fromContainer _ = 0
+instance (Container Int n) => Container Int (Succ n) where
+	fromContainer _ = succ $ fromContainer (undefined :: n)
+
+-- compare cardinal numbers: 
+class (Container Int n, Container Int m) => LessThan n m 
+instance (Container Int n) => LessThan Zero (Succ n)
+instance (LessThan n m) => LessThan (Succ n) (Succ m)
+
+class (Container Int n, Container Int m) => Equal n m 
+instance Equal Zero Zero
+instance (Equal n m) => Equal (Succ n) (Succ m)
+
+class (Container Int n, Container Int m) => LessOrEqual n m 
+instance LessOrEqual Zero Zero
+instance (Container Int n) => LessOrEqual Zero (Succ n)
+instance (LessOrEqual n m) => LessOrEqual (Succ n) (Succ m)
+
 class Inc a b | a -> b
 --instance Inc Zero (Succ Zero)
 --instance Inc (Succ a) (Succ (Succ a))
@@ -73,12 +99,3 @@ n7 = Succ n6
 n8 = Succ n7
 n9 = Succ n8
 
-instance Show Zero where
-	show n = show $ fromContainer n
-instance ( Container Int n ) => Show (Succ n) where
-	show (Succ n) = show $ fromContainer (Succ n)
-
-instance Container Int Zero where
-	fromContainer _ = 0
-instance (Container Int n) => Container Int (Succ n) where
-	fromContainer _ = succ $ fromContainer (undefined :: n)
