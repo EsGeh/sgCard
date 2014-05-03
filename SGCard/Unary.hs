@@ -15,7 +15,14 @@ data Succ n = Succ n deriving(Typeable,Data)
 instance Show Zero where
 	show n = show $ fromContainer n
 instance ( Container Int n ) => Show (Succ n) where
+	show n = show $ fromContainer n
+
+{-
+instance Show Zero where
+	show n = show $ fromContainer n
+instance ( Container Int n ) => Show (Succ n) where
 	show (Succ n) = show $ fromContainer (Succ n)
+-}
 
 -- container for Integers:
 instance Container Int Zero where
