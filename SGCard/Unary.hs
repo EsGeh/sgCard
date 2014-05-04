@@ -1,21 +1,31 @@
 {-# LANGUAGE MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances, DeriveDataTypeable, Rank2Types, ScopedTypeVariables, FlexibleContexts, UndecidableInstances #-}
---{-# OPTIONS_GHC -fglasgow-exts #-}
-module SGCard.Unary where
+{- |This module provides a way to represent Int values at type level-}
+module SGCard.Unary(
+	-- *basic types 
+	Zero, Succ,
+	-- * reflect integers to types (runtime)
+	withCard,
+	-- * type arithmetic
+	LessThan, Equal, LessOrEqual,
+	Inc, Add, Mul, inc, add, mul,
+	-- * shortcuts
+	n0, n1, n2, n3, n4, n5, n6, n8, n9, 
+	N0, N1, N2, N3, N4, N5, N6, N8, N9, 
+	
+) where
+
 import SGCard.Container
---import SGCard.Card(Card)
---import Util
-
-
 import Data.Generics
+
 
 data Zero = Zero deriving(Typeable,Data)
 data Succ n = Succ n deriving(Typeable,Data)
 
--- show instance
+-- show instances
 instance Show Zero where
 	show n = show $ fromContainer n
 instance ( Container Int n ) => Show (Succ n) where
-	show (Succ n) = show $ fromContainer (Succ n)
+	show n = show $ fromContainer n
 
 -- container for Integers:
 instance Container Int Zero where
@@ -38,17 +48,15 @@ instance (Container Int n) => LessOrEqual Zero (Succ n)
 instance (LessOrEqual n m) => LessOrEqual (Succ n) (Succ m)
 
 class Inc a b | a -> b
---instance Inc Zero (Succ Zero)
---instance Inc (Succ a) (Succ (Succ a))
 instance (Container Int n) => Inc n (Succ n)
 
-class (Container Int a, Container Int b) => Add a b c | a b -> c --, a c -> b
+-- simple arithmetic
+class (Container Int a, Container Int b) => Add a b c | a b -> c
 instance (Container Int b) => Add Zero b b
 instance (Add a b c) => Add (Succ a) b (Succ c)
 
 class (Container Int a, Container Int b, Container Int c) => Mul a b c | a b -> c 
 instance (Container Int b) => Mul Zero b Zero
---instance Mul N1 b N1
 instance (Container Int c,Container Int c', Mul a b c, Add c b c') => Mul (Succ a) b c'
 
 inc :: (Inc a b) => a -> b
@@ -64,6 +72,11 @@ mul = undefined
 succ' :: (Container Int n)=>  n -> Succ n
 succ' = Succ
 
+{- |\'withCard int f\' executes a function with a \"reified\" Int. This allows for a type to reflect a value fixed at runtime.
+
+So the main purpose of this method is to provide a context, in which a type is defined that reflects an integer.
+Notice, that this type can never leave the context of the function f. 
+-}
 withCard :: Int -> (forall n . Container Int n => n -> w) -> w
 withCard 0 f = f (undefined :: Zero)
 withCard n f = withCard (n-1) (\(_ :: n) -> f (undefined :: Succ n))
