@@ -22,7 +22,7 @@ class Container t c | c -> t where
 fromCard :: (Container Int c) => c -> Int
 fromCard = fromContainer
 
-instance (Container t l, Container t r) => Container (t,t) (l,r) where
+instance (Container t1 l, Container t2 r) => Container (t1,t2) (l,r) where
 	fromContainer tuple = (fromContainer $ fst tuple, fromContainer $ snd tuple)
 
 
@@ -30,23 +30,27 @@ instance (Container t l, Container t r) => Container (t,t) (l,r) where
 still experimental...
 -}
 instance (Reifies config Int) => Container Int (Proxy config) where
+{-
+instance (Reifies config t) => Container t (Proxy config) where
+	-- :: proxy config -> t
+-}
 	fromContainer x = reflect x
 
-{- examples:
-example = reify 10 f
-	where
-		f :: Reifies config Int => Proxy config -> String
-		f n = show $ fromContainer n
-example2 :: String
-example2 = reify (10,20) f
-	where
-		f n = show $ fromContainer n
+reify1 x = reify x
 
-exampleString :: String
-exampleString = reify "Hello World!" f
-	where
-		f n = fromContainer n
+reify2 :: a -> b -> (forall l r . (Container a l, Container b r) => l -> r -> res) -> res
+reify2 a b f = reify a (\n1 -> reify b (f n1))
+
+reify3 :: a -> b -> c -> (forall t1 t2 t3. (Container a t1, Container b t2, Container c t3) => t1 -> t2 -> t3 -> res) -> res
+reify3 a b c f = reify a (\n1 -> reify b (\n2 -> reify c (f n1 n2)))
+
+reify4 :: a -> b -> c -> d -> (forall t1 t2 t3 t4 . (Container a t1, Container b t2, Container c t3, Container d t4) => t1 -> t2 -> t3 -> t4 -> res) -> res
+reify4 a b c d f = reify a (\n1 -> reify b (\n2 -> reify c (\n3 -> reify d (f n1 n2 n3))))
+{-
+instance (Reifies config Int) => Container Int (Proxy config) where
+	fromContainer x = reflect x
 -}
+
 
 {-
 newtype StringWrapper = S { fromWrapper :: String }
