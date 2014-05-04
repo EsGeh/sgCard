@@ -1,28 +1,18 @@
 {-# LANGUAGE MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances, DeriveDataTypeable, Rank2Types, ScopedTypeVariables, FlexibleContexts, UndecidableInstances #-}
---{-# OPTIONS_GHC -fglasgow-exts #-}
 module SGCard.Unary where
+
 import SGCard.Container
---import SGCard.Card(Card)
---import Util
-
-
 import Data.Generics
+
 
 data Zero = Zero deriving(Typeable,Data)
 data Succ n = Succ n deriving(Typeable,Data)
 
--- show instance
+-- show instances
 instance Show Zero where
 	show n = show $ fromContainer n
 instance ( Container Int n ) => Show (Succ n) where
 	show n = show $ fromContainer n
-
-{-
-instance Show Zero where
-	show n = show $ fromContainer n
-instance ( Container Int n ) => Show (Succ n) where
-	show (Succ n) = show $ fromContainer (Succ n)
--}
 
 -- container for Integers:
 instance Container Int Zero where
@@ -45,17 +35,15 @@ instance (Container Int n) => LessOrEqual Zero (Succ n)
 instance (LessOrEqual n m) => LessOrEqual (Succ n) (Succ m)
 
 class Inc a b | a -> b
---instance Inc Zero (Succ Zero)
---instance Inc (Succ a) (Succ (Succ a))
 instance (Container Int n) => Inc n (Succ n)
 
-class (Container Int a, Container Int b) => Add a b c | a b -> c --, a c -> b
+-- simple arithmetic
+class (Container Int a, Container Int b) => Add a b c | a b -> c
 instance (Container Int b) => Add Zero b b
 instance (Add a b c) => Add (Succ a) b (Succ c)
 
 class (Container Int a, Container Int b, Container Int c) => Mul a b c | a b -> c 
 instance (Container Int b) => Mul Zero b Zero
---instance Mul N1 b N1
 instance (Container Int c,Container Int c', Mul a b c, Add c b c') => Mul (Succ a) b c'
 
 inc :: (Inc a b) => a -> b

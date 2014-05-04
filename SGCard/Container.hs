@@ -13,15 +13,9 @@ fromCard = fromContainer
 instance (Container t l, Container t r) => Container (t,t) (l,r) where
 	fromContainer tuple = (fromContainer $ fst tuple, fromContainer $ snd tuple)
 
-{-instance (Container t fst, Container t snd) => Fst (fst,snd) fst
-instance (Container t fst, Container t snd) => Snd (fst,snd) snd
--}
 
 -- this enables compatibility with the "reflection" library.
 -- still experimental...
-{-instance (Reifies config t) => Container t (Proxy config) where
-	fromContainer x = reflect x
--}
 instance (Reifies config Int) => Container Int (Proxy config) where
 	fromContainer x = reflect x
 
