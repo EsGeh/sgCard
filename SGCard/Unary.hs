@@ -1,5 +1,18 @@
 {-# LANGUAGE MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances, DeriveDataTypeable, Rank2Types, ScopedTypeVariables, FlexibleContexts, UndecidableInstances #-}
-module SGCard.Unary where
+{- |This module provides a way to represent Int values at type level-}
+module SGCard.Unary(
+	-- *basic types 
+	Zero, Succ,
+	-- * reflect integers to types (runtime)
+	withCard,
+	-- * type arithmetic
+	LessThan, Equal, LessOrEqual,
+	Inc, Add, Mul, inc, add, mul,
+	-- * shortcuts
+	n0, n1, n2, n3, n4, n5, n6, n8, n9, 
+	N0, N1, N2, N3, N4, N5, N6, N8, N9, 
+	
+) where
 
 import SGCard.Container
 import Data.Generics
@@ -59,6 +72,11 @@ mul = undefined
 succ' :: (Container Int n)=>  n -> Succ n
 succ' = Succ
 
+{- |\'withCard int f\' executes a function with a \"reified\" Int. This allows for a type to reflect a value fixed at runtime.
+
+So the main purpose of this method is to provide a context, in which a type is defined that reflects an integer.
+Notice, that this type can never leave the context of the function f. 
+-}
 withCard :: Int -> (forall n . Container Int n => n -> w) -> w
 withCard 0 f = f (undefined :: Zero)
 withCard n f = withCard (n-1) (\(_ :: n) -> f (undefined :: Succ n))
