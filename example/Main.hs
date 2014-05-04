@@ -6,10 +6,11 @@ import Data.Reflection
 
 
 main = do
+	print $ test2
+	print $ testAdd
 	print $ testVec
 	print $ testWithCard
 
--- not working yet!
 test2 = show $ (undefined :: N2)
 testAdd = show $ (undefined :: Add N2 N3 res => res)
 
@@ -32,9 +33,10 @@ vR = (v n3 [4,5,6])
 
 testVec = addV vL vR
 
--- use "reify"/ withCard
+-- reflect values to types at compile time:
 
 testWithCard = withCard 10 f
 
 f :: Container Int n => n -> [Int]
-f n = fromVec $ v n [1..] `addV` v n [1..]
+f n = fromVec $	-- type n cannot leave this context...
+	v n [1..] `addV` v n [1..]
