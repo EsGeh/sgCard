@@ -5,6 +5,7 @@ module SGCard.Unary(
 	Zero, Succ,
 	-- * reflect integers to types (runtime)
 	withCard,
+	withCard1, withCard2, withCard3, withCard4,
 	-- * type arithmetic
 	LessThan, Equal, LessOrEqual,
 	Inc, Add, Mul, inc, add, mul,
@@ -81,6 +82,19 @@ withCard :: Int -> (forall n . Container Int n => n -> w) -> w
 withCard 0 f = f (undefined :: Zero)
 withCard n f = withCard (n-1) (\(_ :: n) -> f (undefined :: Succ n))
 
+
+withCard1 :: Int -> (forall t . (Container Int t) => t -> res) -> res
+withCard1 x f = withCard x f
+
+withCard2 :: Int -> Int -> (forall l r . (Container Int l, Container Int r) => l -> r -> res) -> res
+withCard2 a b f = withCard a (\n1 -> withCard b (f n1))
+
+withCard3 :: Int -> Int -> Int -> (forall t1 t2 t3. (Container Int t1, Container Int t2, Container Int t3) => t1 -> t2 -> t3 -> res) -> res
+withCard3 a b c f = withCard a (\n1 -> withCard b (\n2 -> withCard c (f n1 n2)))
+
+withCard4 :: Int -> Int -> Int -> Int -> (forall t1 t2 t3 t4 . (Container Int t1, Container Int t2, Container Int t3, Container Int t4) => t1 -> t2 -> t3 -> t4 -> res) -> res
+withCard4 a b c d f = withCard a (\n1 -> withCard b (\n2 -> withCard c (\n3 -> withCard d (f n1 n2 n3))))
+
 type N0 = Zero
 type N1 = Succ N0
 type N2 = Succ N1
@@ -111,4 +125,3 @@ n6 = Succ n5
 n7 = Succ n6
 n8 = Succ n7
 n9 = Succ n8
-

@@ -1,6 +1,15 @@
-{-# LANGUAGE MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances, FlexibleContexts, UndecidableInstances #-}
+{-# LANGUAGE MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances, FlexibleContexts, UndecidableInstances, Rank2Types #-}
 {- |basic types classes for representing values at type level-}
-module SGCard.Container where
+module SGCard.Container(
+	-- * basic type classes
+	Container, fromContainer,
+	fromCard,
+	-- * generalisation of \"reify\" (from the reflection-library)
+	reify1,
+	reify2,
+	reify3,
+	reify4
+)where
 
 import Data.Reflection
 import Data.Proxy
@@ -29,14 +38,12 @@ instance (Container t1 l, Container t2 r) => Container (t1,t2) (l,r) where
 {- |this enables compatibility with the "reflection" library.
 still experimental...
 -}
-instance (Reifies config Int) => Container Int (Proxy config) where
-{-
 instance (Reifies config t) => Container t (Proxy config) where
 	-- :: proxy config -> t
--}
 	fromContainer x = reflect x
 
-reify1 x = reify x
+reify1 :: a -> (forall t . (Container a t) => t -> res) -> res
+reify1 x f = reify x f
 
 reify2 :: a -> b -> (forall l r . (Container a l, Container b r) => l -> r -> res) -> res
 reify2 a b f = reify a (\n1 -> reify b (f n1))
