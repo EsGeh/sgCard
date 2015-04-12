@@ -6,10 +6,10 @@ import SGCard.Card(Card)
 --import Util
 
 
-import Data.Generics
+--import Data.Generics
 
-data Zero = Zero deriving(Typeable,Data)
-data Succ n = Succ n deriving(Typeable,Data)
+data Zero = Zero --deriving(Typeable,Data)
+data Succ n = Succ n --deriving(Typeable,Data)
 
 class Inc a b | a -> b
 --instance Inc Zero (Succ Zero)
