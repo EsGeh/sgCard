@@ -5,7 +5,7 @@ name:                sgCardExample
 version:             0.1.0.0
 synopsis:            demonstrating the use of sgCard library
 -- description:         
--- license:             
+license:             BSD3
 license-file:        LICENSE
 author:              EsGeh
 maintainer:          SamuelGfroerer@googlemail.com
@@ -17,4 +17,6 @@ cabal-version:       >=1.8
 executable sgCardExample
   main-is:             Main.hs
   -- other-modules:       
-  build-depends:       base ==4.6.*, sgCard==1.3.*
+  build-depends:
+    base >=4.6 && < 4.9,
+    sgCard
